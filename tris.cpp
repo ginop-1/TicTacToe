@@ -1,7 +1,6 @@
 #include <iostream>
 #include <random>
 #include <string>
-#include <algorithm>
 
 using namespace std;
 
@@ -20,10 +19,8 @@ int main()
         if (playerXO == "X" || playerXO == "x" || playerXO == "O" || playerXO == "o") break;
         else cout << "wrong value, please reinsert: ";
     }
-    for_each(playerXO.begin(), playerXO.end(), [](char & c) 
-    { 
-        c = toupper(c); // Upper up string
-    }); 
+    if (playerXO == "x") playerXO = "X";
+    else playerXO = "O"; 
     if (playerXO == "X") CPUXO = "O";
     else CPUXO = "X";
     PrintGrid(grid);
