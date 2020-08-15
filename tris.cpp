@@ -6,7 +6,7 @@
 using namespace std;
 
 void PrintGrid(string*);
-void CPUMove(string*);
+void CPUmove(string*, string, string);
 bool CheckWin(string*, string);
 
 int main()
@@ -54,7 +54,9 @@ int main()
         }
         if (startplayer == 1)
         {
+            CPUmove(grid, CPUXO, playerXO);
             cout << "CPU turn\n";
+            PrintGrid(grid);
             startplayer = 0;
         }
     }
@@ -81,4 +83,30 @@ bool CheckWin(string grid[8], string XorO)
     if (grid[2] == XorO && grid[5] == XorO && grid[8] == XorO) return true; // third column
     if (grid[0] == XorO && grid[4] == XorO && grid[8] == XorO) return true; // first oblique
     if (grid[2] == XorO && grid[4] == XorO && grid[6] == XorO) return true; // second oblique
+}
+
+void CPUmove(string grid[8], string XorO, string enemyXO)
+{
+        // Can i win? lez find out man
+    // ROWS
+    if (grid[0] == XorO && grid[1] == XorO ) grid[2] = XorO; return;
+    if (grid[1] == XorO && grid[2] == XorO ) grid[0] = XorO; return;
+    if (grid[0] == XorO && grid[2] == XorO ) grid[1] = XorO; return;
+    if (grid[3] == XorO && grid[4] == XorO ) grid[5] = XorO; return;
+    if (grid[4] == XorO && grid[5] == XorO ) grid[3] = XorO; return;
+    if (grid[3] == XorO && grid[5] == XorO ) grid[4] = XorO; return;
+    if (grid[6] == XorO && grid[7] == XorO ) grid[8] = XorO; return;
+    if (grid[7] == XorO && grid[8] == XorO ) grid[6] = XorO; return;
+    if (grid[6] == XorO && grid[8] == XorO ) grid[7] = XorO; return;
+    // COLUMNS
+    if (grid[0] == XorO && grid[3] == XorO ) grid[6] = XorO; return;
+    if (grid[1] == XorO && grid[4] == XorO ) grid[7] = XorO; return;
+    if (grid[2] == XorO && grid[5] == XorO ) grid[8] = XorO; return;
+    if (grid[0] == XorO && grid[6] == XorO ) grid[3] = XorO; return;
+    if (grid[1] == XorO && grid[7] == XorO ) grid[4] = XorO; return;
+    if (grid[2] == XorO && grid[8] == XorO ) grid[5] = XorO; return;
+    if (grid[3] == XorO && grid[6] == XorO ) grid[0] = XorO; return;
+    if (grid[4] == XorO && grid[7] == XorO ) grid[1] = XorO; return;
+    if (grid[5] == XorO && grid[8] == XorO ) grid[2] = XorO; return;
+
 }
