@@ -1,3 +1,3 @@
-# Tris
+# TicTacToe
 
-A simple tris game written in c++
+A simple TicTacToe game written in c++
