@@ -1,8 +1,12 @@
 #include <iostream>
 #include <random>
 #include <string>
+#include <experimental/random>
 
-using namespace std;
+using std::cout;
+using std::cin;
+using std::string;
+using std::endl;
 
 bool isGridFull(string*, int);
 void PrintGrid(string*);
@@ -15,7 +19,7 @@ int main()
     string playerXO, CPUXO, printNumbers; int startplayer, playermove, cpumove, i;
     string grid[] = {"1", "2", "3", "4", "5", "6", "7", "8", "9"};
     PrintGrid(grid);
-    for (i=0; i<=8; i++) grid[i] = " "; // for cleaning the array
+    for (auto i=0; i<=8; i++) grid[i] = " "; // for cleaning the array
     cout << "Welcome to the tris game, the initial player will be random\n\n" << "Choose beetween X or O: ";
     while (true) 
     {
@@ -27,12 +31,12 @@ int main()
     else playerXO = "O"; 
     if (playerXO == "X") CPUXO = "O";
     else CPUXO = "X";
-    srand (time(NULL)); startplayer = rand() % 2 + 0; // selecting random number (0 or 1) for starting player
+    startplayer = std::experimental::randint(0, 1);
     while (true)
     {
         if (startplayer == 0) 
         {
-            if (isGridFull(grid, i=0)) 
+            if (isGridFull(grid, i=0))
             {
                 cout << "this a draw!\n";
                 break;
@@ -96,7 +100,6 @@ bool isGridFull(string grid[8], int i)
         if (grid[i] == " ") 
         {
             return false;
-            break;
         }
         if (i==8) return true;
     } 
@@ -104,25 +107,20 @@ bool isGridFull(string grid[8], int i)
 
 bool moveCheck(string grid[8], string XorO, int a, int b, int c)
 {
-    if (grid[a] == XorO && grid[b] == XorO) 
-    {
-        if (grid[c] != " ") return false;
-        else return true;
-    }
-    else return false;
+    if (grid[a]==XorO && grid[b]==XorO && grid[c]==" ") return true;
 }
 
 bool CheckWin(string grid[8], string XorO)
 {
     if (grid[0] == XorO && grid[1] == XorO && grid[2] == XorO) return true; // first row
-    else if (grid[3] == XorO && grid[4] == XorO && grid[5] == XorO) return true; // second row
-    else if (grid[6] == XorO && grid[7] == XorO && grid[8] == XorO) return true; // third row
-    else if (grid[0] == XorO && grid[3] == XorO && grid[6] == XorO) return true; // first column
-    else if (grid[1] == XorO && grid[4] == XorO && grid[7] == XorO) return true; // second column
-    else if (grid[2] == XorO && grid[5] == XorO && grid[8] == XorO) return true; // third column
-    else if (grid[0] == XorO && grid[4] == XorO && grid[8] == XorO) return true; // first oblique
-    else if (grid[2] == XorO && grid[4] == XorO && grid[6] == XorO) return true; // second oblique
-    else return false;
+    if (grid[3] == XorO && grid[4] == XorO && grid[5] == XorO) return true; // second row
+    if (grid[6] == XorO && grid[7] == XorO && grid[8] == XorO) return true; // third row
+    if (grid[0] == XorO && grid[3] == XorO && grid[6] == XorO) return true; // first column
+    if (grid[1] == XorO && grid[4] == XorO && grid[7] == XorO) return true; // second column
+    if (grid[2] == XorO && grid[5] == XorO && grid[8] == XorO) return true; // third column
+    if (grid[0] == XorO && grid[4] == XorO && grid[8] == XorO) return true; // first oblique
+    if (grid[2] == XorO && grid[4] == XorO && grid[6] == XorO) return true; // second oblique
+    return false;
 }
 
 string CPUmove(string grid[8], string XorO, string enemyXO, int i)
@@ -188,7 +186,7 @@ string CPUmove(string grid[8], string XorO, string enemyXO, int i)
     
         // OTHER MOVES
     
-    for (i=0; i<=8; i+=2)
+    for (auto i=0; i<=8; i+=2)
     {
         if (grid[i] == " ") 
         {
