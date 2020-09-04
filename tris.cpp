@@ -13,14 +13,23 @@ void PrintGrid(string*);
 string CPUmove(string*, string, string, int);
 bool CheckWin(string*, string);
 bool moveCheck(string*, string, int);
+string moveAndCheck(string*, string, int);
 
 int main()
 {
-    string playerXO, CPUXO, printNumbers; int startplayer, playermove, cpumove, i;
+    string playerXO, CPUXO, printNumbers; 
+    int startplayer, playermove, cpumove, i, gameMode;
     string grid[] = {"1", "2", "3", "4", "5", "6", "7", "8", "9"};
     PrintGrid(grid);
     for (auto i=0; i<=8; i++) grid[i] = " "; // for cleaning the array
-    cout << "Welcome to the tris game, the initial player will be random\n\n" << "Choose beetween X or O: ";
+    cout << "Welcome to the tris game, the initial player will be random\n\n" << "Choose a game mode: 1 vs PC (1) or 1 vs 1 (2):";
+    while (true)
+    {
+        cin >> gameMode;
+        if (gameMode == 1 || gameMode == 2) break;
+        cout << "wrong value, please reinsert: ";
+    }
+    cout << "Now choose between X or O: ";
     while (true) 
     {
         cin >> playerXO;
@@ -32,53 +41,70 @@ int main()
     if (playerXO == "X") CPUXO = "O";
     else CPUXO = "X";
     startplayer = std::experimental::randint(0, 1);
-    while (true)
+    if (gameMode == 1)
     {
-        if (startplayer == 0) 
+        while (true)
         {
-            if (isGridFull(grid, i=0))
+            if (startplayer == 0) 
             {
-                cout << "this a draw!\n";
-                break;
-            }
-            cout << "it's your turn, choose a box\n";
-            while (true) 
-            {
-                cin >> playermove;
-                playermove--;
-                if (grid[playermove] != " ") cout << "this box is already filled, please insert a valid value: ";
-                else 
+                if (isGridFull(grid, i=0)) break;
+                cout << "it's your turn, choose a box\n";
+                moveAndCheck(grid, playerXO, playermove);
+                PrintGrid(grid);
+                if (CheckWin(grid, playerXO)) 
                 {
-                    grid[playermove] = playerXO; 
+                    cout << "Congrats, you have won! \n\n";
+                    break;
+                } 
+                startplayer = 1;
+            }
+            if (startplayer == 1)
+            {
+                if (isGridFull(grid, i=0)) break;
+                cout << "CPU turn\n";
+                CPUmove(grid, CPUXO, playerXO, i=0);
+                PrintGrid(grid);
+                if (CheckWin(grid, CPUXO))
+                {
+                    cout << "the CPU wins! \n\n";
                     break;
                 }
+                startplayer = 0;
             }
-            PrintGrid(grid);
-            if (CheckWin(grid, playerXO)) 
-            {
-                cout << "Congrats, you have won!\n";
-                break;
-            } 
-            startplayer = 1;
-        }
-        if (startplayer == 1)
-        {
-            if (isGridFull(grid, i=0)) 
-            {
-                cout << "this a draw!\n";
-                break;
-            }
-            cout << "CPU turn\n";
-            CPUmove(grid, CPUXO, playerXO, i=0);
-            PrintGrid(grid);
-            if (CheckWin(grid, CPUXO))
-            {
-                cout << "the CPU wins!\n";
-                break;
-            }
-            startplayer = 0;
         }
     }
+    else
+    {
+        while (true) 
+        {
+            if (startplayer == 1) 
+            {
+                if (isGridFull(grid, i=0)) break;
+                cout << "it's P1 turn, choose a box\n";
+                moveAndCheck(grid, playerXO, playermove);
+                PrintGrid(grid);
+                if (CheckWin(grid, playerXO))
+                {
+                    cout << "player1 wins! \n\n";
+                    break;
+                }
+                startplayer = 0;
+            }
+            else 
+            {
+                if (isGridFull(grid, i=0)) break;
+                cout << "it's P2 turn, choose a box\n";
+                moveAndCheck(grid, CPUXO, playermove);
+                PrintGrid(grid);
+                if (CheckWin(grid, CPUXO))
+                {
+                    cout << "player2 wins! \n\n";
+                    break;
+                }
+                startplayer = 1;
+            }
+        }
+    }   
     return 0;
 }
 
@@ -101,8 +127,25 @@ bool isGridFull(string grid[8], int i)
         {
             return false;
         }
-        if (i==8) return true;
-    } 
+    }
+    cout << "Thid is a draw! ";
+    return true;
+}
+
+string moveAndCheck(string grid[8], string PlayerXO, int playermove)
+{
+    while (true) 
+    {
+        cin >> playermove;
+        playermove--;
+        if (grid[playermove] != " ") cout << "this box is already filled, please insert a valid value: ";
+        else 
+        {
+            grid[playermove] = PlayerXO; 
+            return PlayerXO;
+
+        }
+    }
 }
 
 bool moveCheck(string grid[8], string XorO, int a, int b, int c)
