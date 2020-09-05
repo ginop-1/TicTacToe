@@ -1,6 +1,5 @@
 #include <iostream>
 #include <random>
-#include <string>
 #include <experimental/random>
 
 using std::cout;
@@ -12,17 +11,19 @@ bool isGridFull(string*, int);
 void PrintGrid(string*);
 string CPUmove(string*, string, string, int);
 bool CheckWin(string*, string);
-bool moveCheck(string*, string, int);
+bool isMoveCorrect(string*, string, int);
 string moveAndCheck(string*, string, int);
 
 int main()
 {
     string playerXO, CPUXO, printNumbers; 
-    int startplayer, playermove, cpumove, i, gameMode;
+    bool startplayer; int playermove, cpumove, i, gameMode;
     string grid[] = {"1", "2", "3", "4", "5", "6", "7", "8", "9"};
     PrintGrid(grid);
     for (auto i=0; i<=8; i++) grid[i] = " "; // for cleaning the array
-    cout << "Welcome to the tris game, the initial player will be random\n\n" << "Choose a game mode: 1 vs PC (1) or 1 vs 1 (2):";
+    cout << "Welcome to the tris game!" << endl
+         << "the initial player will be random" << endl
+         << "Choose a game mode: 1 vs PC (1) or 1 vs 1 (2):" << endl;
     while (true)
     {
         cin >> gameMode;
@@ -41,70 +42,58 @@ int main()
     if (playerXO == "X") CPUXO = "O";
     else CPUXO = "X";
     startplayer = std::experimental::randint(0, 1);
-    if (gameMode == 1)
+
+    while (true)
     {
-        while (true)
+        if (startplayer) 
         {
-            if (startplayer == 0) 
+            if (isGridFull(grid, i=0)) break;
+            if (gameMode == 1) cout << "it's your turn, choose a box\n";
+            else cout << "It's player 1 turn, choose a box\n";
+            moveAndCheck(grid, playerXO, playermove);
+            PrintGrid(grid);
+            if (CheckWin(grid, playerXO)) 
             {
-                if (isGridFull(grid, i=0)) break;
-                cout << "it's your turn, choose a box\n";
-                moveAndCheck(grid, playerXO, playermove);
-                PrintGrid(grid);
-                if (CheckWin(grid, playerXO)) 
+                if (gameMode == 1) 
                 {
                     cout << "Congrats, you have won! \n\n";
                     break;
-                } 
-                startplayer = 1;
-            }
-            if (startplayer == 1)
-            {
-                if (isGridFull(grid, i=0)) break;
-                cout << "CPU turn\n";
-                CPUmove(grid, CPUXO, playerXO, i=0);
-                PrintGrid(grid);
-                if (CheckWin(grid, CPUXO))
+                }
+                else 
                 {
-                    cout << "the CPU wins! \n\n";
+                    cout << "player 1 win!";
                     break;
                 }
-                startplayer = 0;
-            }
+            } 
+            startplayer = false;
         }
-    }
-    else
-    {
-        while (true) 
+        if (startplayer == false && gameMode == 2)
         {
-            if (startplayer == 1) 
+            if (isGridFull(grid, i=0)) break;
+            cout << "it's P2 turn, choose a box\n";
+            moveAndCheck(grid, CPUXO, playermove);
+            PrintGrid(grid);
+            if (CheckWin(grid, CPUXO))
             {
-                if (isGridFull(grid, i=0)) break;
-                cout << "it's P1 turn, choose a box\n";
-                moveAndCheck(grid, playerXO, playermove);
-                PrintGrid(grid);
-                if (CheckWin(grid, playerXO))
-                {
-                    cout << "player1 wins! \n\n";
-                    break;
-                }
-                startplayer = 0;
+                cout << "player2 wins! \n\n";
+                break;
             }
-            else 
+            startplayer = true;
+        } 
+        else
+        {
+            if (isGridFull(grid, i=0)) break;
+            cout << "CPU turn\n";
+            CPUmove(grid, CPUXO, playerXO, i=0);
+            PrintGrid(grid);
+            if (CheckWin(grid, CPUXO))
             {
-                if (isGridFull(grid, i=0)) break;
-                cout << "it's P2 turn, choose a box\n";
-                moveAndCheck(grid, CPUXO, playermove);
-                PrintGrid(grid);
-                if (CheckWin(grid, CPUXO))
-                {
-                    cout << "player2 wins! \n\n";
-                    break;
-                }
-                startplayer = 1;
+                cout << "the CPU wins! \n\n";
+                break;
             }
+            startplayer = true;
         }
-    }   
+    }       
     return 0;
 }
 
@@ -148,7 +137,7 @@ string moveAndCheck(string grid[8], string PlayerXO, int playermove)
     }
 }
 
-bool moveCheck(string grid[8], string XorO, int a, int b, int c)
+bool isMoveCorrect(string grid[8], string XorO, int a, int b, int c)
 {
     if (grid[a]==XorO && grid[b]==XorO && grid[c]==" ") return true;
 }
@@ -171,61 +160,61 @@ string CPUmove(string grid[8], string XorO, string enemyXO, int i)
         // TRY TO WIN IF POSSIBLE 
     
     // ROWS
-    if (moveCheck(grid, XorO, 0, 1 ,2)) { grid[2] = XorO; return XorO; }
-    if (moveCheck(grid, XorO, 1, 2 ,0)) { grid[0] = XorO; return XorO; }
-    if (moveCheck(grid, XorO, 0, 2 ,1)) { grid[1] = XorO; return XorO; }
-    if (moveCheck(grid, XorO, 3, 4 ,5)) { grid[5] = XorO; return XorO; }
-    if (moveCheck(grid, XorO, 4, 5 ,3)) { grid[3] = XorO; return XorO; }
-    if (moveCheck(grid, XorO, 3, 5 ,4)) { grid[4] = XorO; return XorO; }
-    if (moveCheck(grid, XorO, 6, 7 ,8)) { grid[8] = XorO; return XorO; }
-    if (moveCheck(grid, XorO, 7, 8 ,6)) { grid[6] = XorO; return XorO; }
-    if (moveCheck(grid, XorO, 6, 8 ,7)) { grid[7] = XorO; return XorO; }
+    if (isMoveCorrect(grid, XorO, 0, 1 ,2)) { grid[2] = XorO; return XorO; }
+    if (isMoveCorrect(grid, XorO, 1, 2 ,0)) { grid[0] = XorO; return XorO; }
+    if (isMoveCorrect(grid, XorO, 0, 2 ,1)) { grid[1] = XorO; return XorO; }
+    if (isMoveCorrect(grid, XorO, 3, 4 ,5)) { grid[5] = XorO; return XorO; }
+    if (isMoveCorrect(grid, XorO, 4, 5 ,3)) { grid[3] = XorO; return XorO; }
+    if (isMoveCorrect(grid, XorO, 3, 5 ,4)) { grid[4] = XorO; return XorO; }
+    if (isMoveCorrect(grid, XorO, 6, 7 ,8)) { grid[8] = XorO; return XorO; }
+    if (isMoveCorrect(grid, XorO, 7, 8 ,6)) { grid[6] = XorO; return XorO; }
+    if (isMoveCorrect(grid, XorO, 6, 8 ,7)) { grid[7] = XorO; return XorO; }
     // COLUMNS
-    if (moveCheck(grid, XorO, 0, 3 ,6)) { grid[6] = XorO; return XorO; }
-    if (moveCheck(grid, XorO, 1, 4 ,7)) { grid[7] = XorO; return XorO; }
-    if (moveCheck(grid, XorO, 2, 5 ,8)) { grid[8] = XorO; return XorO; }
-    if (moveCheck(grid, XorO, 0, 6 ,3)) { grid[3] = XorO; return XorO; }
-    if (moveCheck(grid, XorO, 1, 7 ,4)) { grid[4] = XorO; return XorO; }
-    if (moveCheck(grid, XorO, 2, 8 ,5)) { grid[5] = XorO; return XorO; }
-    if (moveCheck(grid, XorO, 3, 6 ,0)) { grid[0] = XorO; return XorO; }
-    if (moveCheck(grid, XorO, 4, 7 ,1)) { grid[1] = XorO; return XorO; }
-    if (moveCheck(grid, XorO, 5, 8 ,2)) { grid[2] = XorO; return XorO; }
+    if (isMoveCorrect(grid, XorO, 0, 3 ,6)) { grid[6] = XorO; return XorO; }
+    if (isMoveCorrect(grid, XorO, 1, 4 ,7)) { grid[7] = XorO; return XorO; }
+    if (isMoveCorrect(grid, XorO, 2, 5 ,8)) { grid[8] = XorO; return XorO; }
+    if (isMoveCorrect(grid, XorO, 0, 6 ,3)) { grid[3] = XorO; return XorO; }
+    if (isMoveCorrect(grid, XorO, 1, 7 ,4)) { grid[4] = XorO; return XorO; }
+    if (isMoveCorrect(grid, XorO, 2, 8 ,5)) { grid[5] = XorO; return XorO; }
+    if (isMoveCorrect(grid, XorO, 3, 6 ,0)) { grid[0] = XorO; return XorO; }
+    if (isMoveCorrect(grid, XorO, 4, 7 ,1)) { grid[1] = XorO; return XorO; }
+    if (isMoveCorrect(grid, XorO, 5, 8 ,2)) { grid[2] = XorO; return XorO; }
     //OBLIQUE
-    if (moveCheck(grid, XorO, 0, 4 ,4)) { grid[8] = XorO; return XorO; }
-    if (moveCheck(grid, XorO, 2, 4 ,6)) { grid[6] = XorO; return XorO; }
-    if (moveCheck(grid, XorO, 0, 8 ,4)) { grid[4] = XorO; return XorO; }
-    if (moveCheck(grid, XorO, 2, 6 ,4)) { grid[4] = XorO; return XorO; }
-    if (moveCheck(grid, XorO, 4, 6 ,2)) { grid[2] = XorO; return XorO; }
-    if (moveCheck(grid, XorO, 4, 8 ,0)) { grid[0] = XorO; return XorO; }
+    if (isMoveCorrect(grid, XorO, 0, 4 ,4)) { grid[8] = XorO; return XorO; }
+    if (isMoveCorrect(grid, XorO, 2, 4 ,6)) { grid[6] = XorO; return XorO; }
+    if (isMoveCorrect(grid, XorO, 0, 8 ,4)) { grid[4] = XorO; return XorO; }
+    if (isMoveCorrect(grid, XorO, 2, 6 ,4)) { grid[4] = XorO; return XorO; }
+    if (isMoveCorrect(grid, XorO, 4, 6 ,2)) { grid[2] = XorO; return XorO; }
+    if (isMoveCorrect(grid, XorO, 4, 8 ,0)) { grid[0] = XorO; return XorO; }
     
         // TRY TO NOT LOSE IF POSSIBLE
     // ROWS
-    if (moveCheck(grid, enemyXO, 0, 1 ,2)) { grid[2] = XorO; return XorO; }
-    if (moveCheck(grid, enemyXO, 1, 2 ,0)) { grid[0] = XorO; return XorO; }
-    if (moveCheck(grid, enemyXO, 0, 2 ,1)) { grid[1] = XorO; return XorO; }
-    if (moveCheck(grid, enemyXO, 3, 4 ,5)) { grid[5] = XorO; return XorO; }
-    if (moveCheck(grid, enemyXO, 4, 5 ,3)) { grid[3] = XorO; return XorO; }
-    if (moveCheck(grid, enemyXO, 3, 5 ,4)) { grid[4] = XorO; return XorO; }
-    if (moveCheck(grid, enemyXO, 6, 7 ,8)) { grid[8] = XorO; return XorO; }
-    if (moveCheck(grid, enemyXO, 7, 8 ,6)) { grid[6] = XorO; return XorO; }
-    if (moveCheck(grid, enemyXO, 6, 8 ,7)) { grid[7] = XorO; return XorO; }
+    if (isMoveCorrect(grid, enemyXO, 0, 1 ,2)) { grid[2] = XorO; return XorO; }
+    if (isMoveCorrect(grid, enemyXO, 1, 2 ,0)) { grid[0] = XorO; return XorO; }
+    if (isMoveCorrect(grid, enemyXO, 0, 2 ,1)) { grid[1] = XorO; return XorO; }
+    if (isMoveCorrect(grid, enemyXO, 3, 4 ,5)) { grid[5] = XorO; return XorO; }
+    if (isMoveCorrect(grid, enemyXO, 4, 5 ,3)) { grid[3] = XorO; return XorO; }
+    if (isMoveCorrect(grid, enemyXO, 3, 5 ,4)) { grid[4] = XorO; return XorO; }
+    if (isMoveCorrect(grid, enemyXO, 6, 7 ,8)) { grid[8] = XorO; return XorO; }
+    if (isMoveCorrect(grid, enemyXO, 7, 8 ,6)) { grid[6] = XorO; return XorO; }
+    if (isMoveCorrect(grid, enemyXO, 6, 8 ,7)) { grid[7] = XorO; return XorO; }
     // COLUMNS
-    if (moveCheck(grid, enemyXO, 0, 3 ,6)) { grid[6] = XorO; return XorO; }
-    if (moveCheck(grid, enemyXO, 1, 4 ,7)) { grid[7] = XorO; return XorO; }
-    if (moveCheck(grid, enemyXO, 2, 5 ,8)) { grid[8] = XorO; return XorO; }
-    if (moveCheck(grid, enemyXO, 0, 6 ,3)) { grid[3] = XorO; return XorO; }
-    if (moveCheck(grid, enemyXO, 1, 7 ,4)) { grid[4] = XorO; return XorO; }
-    if (moveCheck(grid, enemyXO, 2, 8 ,5)) { grid[5] = XorO; return XorO; }
-    if (moveCheck(grid, enemyXO, 3, 6 ,0)) { grid[0] = XorO; return XorO; }
-    if (moveCheck(grid, enemyXO, 4, 7 ,1)) { grid[1] = XorO; return XorO; }
-    if (moveCheck(grid, enemyXO, 5, 8 ,2)) { grid[2] = XorO; return XorO; }
+    if (isMoveCorrect(grid, enemyXO, 0, 3 ,6)) { grid[6] = XorO; return XorO; }
+    if (isMoveCorrect(grid, enemyXO, 1, 4 ,7)) { grid[7] = XorO; return XorO; }
+    if (isMoveCorrect(grid, enemyXO, 2, 5 ,8)) { grid[8] = XorO; return XorO; }
+    if (isMoveCorrect(grid, enemyXO, 0, 6 ,3)) { grid[3] = XorO; return XorO; }
+    if (isMoveCorrect(grid, enemyXO, 1, 7 ,4)) { grid[4] = XorO; return XorO; }
+    if (isMoveCorrect(grid, enemyXO, 2, 8 ,5)) { grid[5] = XorO; return XorO; }
+    if (isMoveCorrect(grid, enemyXO, 3, 6 ,0)) { grid[0] = XorO; return XorO; }
+    if (isMoveCorrect(grid, enemyXO, 4, 7 ,1)) { grid[1] = XorO; return XorO; }
+    if (isMoveCorrect(grid, enemyXO, 5, 8 ,2)) { grid[2] = XorO; return XorO; }
     //OBLIQUE
-    if (moveCheck(grid, enemyXO, 0, 4 ,4)) { grid[8] = XorO; return XorO; }
-    if (moveCheck(grid, enemyXO, 2, 4 ,6)) { grid[6] = XorO; return XorO; }
-    if (moveCheck(grid, enemyXO, 0, 8 ,4)) { grid[4] = XorO; return XorO; }
-    if (moveCheck(grid, enemyXO, 2, 6 ,4)) { grid[4] = XorO; return XorO; }
-    if (moveCheck(grid, enemyXO, 4, 6 ,2)) { grid[2] = XorO; return XorO; }
-    if (moveCheck(grid, enemyXO, 4, 8 ,0)) { grid[0] = XorO; return XorO; }
+    if (isMoveCorrect(grid, enemyXO, 0, 4 ,4)) { grid[8] = XorO; return XorO; }
+    if (isMoveCorrect(grid, enemyXO, 2, 4 ,6)) { grid[6] = XorO; return XorO; }
+    if (isMoveCorrect(grid, enemyXO, 0, 8 ,4)) { grid[4] = XorO; return XorO; }
+    if (isMoveCorrect(grid, enemyXO, 2, 6 ,4)) { grid[4] = XorO; return XorO; }
+    if (isMoveCorrect(grid, enemyXO, 4, 6 ,2)) { grid[2] = XorO; return XorO; }
+    if (isMoveCorrect(grid, enemyXO, 4, 8 ,0)) { grid[0] = XorO; return XorO; }
     
         // OTHER MOVES
     
