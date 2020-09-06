@@ -1,6 +1,7 @@
 #include <iostream>
 #include <random>
 #include <experimental/random>
+#include <stdlib.h>
 
 using std::cout;
 using std::cin;
@@ -13,11 +14,12 @@ string CPUmove(string*, string, string, int);
 bool CheckWin(string*, string);
 bool isMoveCorrect(string*, string, int);
 string moveAndCheck(string*, string, int);
+void Clear();
 
 int main()
 {
     string playerXO, CPUXO, printNumbers; 
-    bool startplayer; int playermove, cpumove, i, gameMode;
+    bool startplayer; int playermove, i, gameMode;
     string grid[] = {"1", "2", "3", "4", "5", "6", "7", "8", "9"};
     PrintGrid(grid);
     for (auto i=0; i<=8; i++) grid[i] = " "; // for cleaning the array
@@ -97,8 +99,20 @@ int main()
     return 0;
 }
 
+void Clear()
+{
+#if defined _WIN32
+    system("cls");
+#elif defined (__LINUX__) || defined(__gnu_linux__) || defined(__linux__)
+    system("clear");
+#elif defined (__APPLE__)
+    system("clear");
+#endif
+}
+
 void PrintGrid(string grid[8])
 {
+    Clear();
     cout << "\n"
          << grid[0] << "|" << grid[1] << "|" << grid[2] << endl
          << "-----" << endl
@@ -140,6 +154,7 @@ string moveAndCheck(string grid[8], string PlayerXO, int playermove)
 bool isMoveCorrect(string grid[8], string XorO, int a, int b, int c)
 {
     if (grid[a]==XorO && grid[b]==XorO && grid[c]==" ") return true;
+    return false;
 }
 
 bool CheckWin(string grid[8], string XorO)
@@ -226,5 +241,6 @@ string CPUmove(string grid[8], string XorO, string enemyXO, int i)
             return XorO;
         }
         if (i == 8) i=1;
-    } 
+    }
+    return " "; 
 }
