@@ -8,18 +8,18 @@ using std::cin;
 using std::string;
 using std::endl;
 
-bool isGridFull(string*, int);
+void Clear();
 void PrintGrid(string*);
+string moveAndCheck(string*, string, int);
+bool isMoveCorrect(string*, string, int);
 string CPUmove(string*, string, string, int);
 bool CheckWin(string*, string);
-bool isMoveCorrect(string*, string, int);
-string moveAndCheck(string*, string, int);
-void Clear();
+bool isGridFull(string*, int);
 
 int main()
 {
     string playerXO, CPUXO, printNumbers; 
-    bool startplayer; int playermove, i, gameMode;
+    bool startplayer; int playermove = 0, i, gameMode;
     string grid[] = {"1", "2", "3", "4", "5", "6", "7", "8", "9"};
     PrintGrid(grid);
     for (auto i=0; i<=8; i++) grid[i] = " "; // for cleaning the array
@@ -63,7 +63,7 @@ int main()
                 }
                 else 
                 {
-                    cout << "player 1 win!";
+                    cout << "player 1 win! \n\n";
                     break;
                 }
             } 
@@ -95,19 +95,19 @@ int main()
             }
             startplayer = true;
         }
-    }       
+    }
+    cout << "press return to exit...";
+    cin.ignore(); cin.get();      
     return 0;
 }
 
 void Clear()
 {
-#if defined _WIN32
-    system("cls");
-#elif defined (__LINUX__) || defined(__gnu_linux__) || defined(__linux__)
-    system("clear");
-#elif defined (__APPLE__)
-    system("clear");
-#endif
+    #if defined _WIN32 
+        system("cls");
+    #else 
+        system("clear");
+    #endif
 }
 
 void PrintGrid(string grid[8])
@@ -120,19 +120,6 @@ void PrintGrid(string grid[8])
          << "-----" << endl 
          << grid[6] << "|" << grid[7] << "|" << grid[8] << endl
          << "\n" ;
-}
-
-bool isGridFull(string grid[8], int i)
-{
-    for (i=0; i<=8; i++)
-    {
-        if (grid[i] == " ") 
-        {
-            return false;
-        }
-    }
-    cout << "Thid is a draw! ";
-    return true;
 }
 
 string moveAndCheck(string grid[8], string PlayerXO, int playermove)
@@ -154,19 +141,6 @@ string moveAndCheck(string grid[8], string PlayerXO, int playermove)
 bool isMoveCorrect(string grid[8], string XorO, int a, int b, int c)
 {
     if (grid[a]==XorO && grid[b]==XorO && grid[c]==" ") return true;
-    return false;
-}
-
-bool CheckWin(string grid[8], string XorO)
-{
-    if (grid[0] == XorO && grid[1] == XorO && grid[2] == XorO) return true; // first row
-    if (grid[3] == XorO && grid[4] == XorO && grid[5] == XorO) return true; // second row
-    if (grid[6] == XorO && grid[7] == XorO && grid[8] == XorO) return true; // third row
-    if (grid[0] == XorO && grid[3] == XorO && grid[6] == XorO) return true; // first column
-    if (grid[1] == XorO && grid[4] == XorO && grid[7] == XorO) return true; // second column
-    if (grid[2] == XorO && grid[5] == XorO && grid[8] == XorO) return true; // third column
-    if (grid[0] == XorO && grid[4] == XorO && grid[8] == XorO) return true; // first oblique
-    if (grid[2] == XorO && grid[4] == XorO && grid[6] == XorO) return true; // second oblique
     return false;
 }
 
@@ -243,4 +217,30 @@ string CPUmove(string grid[8], string XorO, string enemyXO, int i)
         if (i == 8) i=1;
     }
     return " "; 
+}
+
+bool CheckWin(string grid[8], string XorO)
+{
+    if (grid[0] == XorO && grid[1] == XorO && grid[2] == XorO) return true; // first row
+    if (grid[3] == XorO && grid[4] == XorO && grid[5] == XorO) return true; // second row
+    if (grid[6] == XorO && grid[7] == XorO && grid[8] == XorO) return true; // third row
+    if (grid[0] == XorO && grid[3] == XorO && grid[6] == XorO) return true; // first column
+    if (grid[1] == XorO && grid[4] == XorO && grid[7] == XorO) return true; // second column
+    if (grid[2] == XorO && grid[5] == XorO && grid[8] == XorO) return true; // third column
+    if (grid[0] == XorO && grid[4] == XorO && grid[8] == XorO) return true; // first oblique
+    if (grid[2] == XorO && grid[4] == XorO && grid[6] == XorO) return true; // second oblique
+    return false;
+}
+
+bool isGridFull(string grid[8], int i)
+{
+    for (i=0; i<=8; i++)
+    {
+        if (grid[i] == " ") 
+        {
+            return false;
+        }
+    }
+    cout << "Thid is a draw! ";
+    return true;
 }
