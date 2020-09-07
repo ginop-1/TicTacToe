@@ -2,9 +2,8 @@
 
 { 
 
-	g++ tris.cpp -o tris >> log.txt &&
+	g++ tris.cpp -o tris
 	./tris
 } || {
-
-	echo 'problem while executing the command, check log for help'
+	echo 'problem while executing the command, maybe missing dependencies?'
 }
