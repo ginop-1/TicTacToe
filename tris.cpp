@@ -1,6 +1,6 @@
 #include <iostream>
 #include <random>
-#include <experimental/random>
+#include <ctime>
 #include <stdlib.h>
 
 using std::cout;
@@ -43,11 +43,13 @@ int main()
     else playerXO = "O"; 
     if (playerXO == "X") CPUXO = "O";
     else CPUXO = "X";
-    startplayer = std::experimental::randint(0, 1);
+    
+    srand((int)time(0));
+    startplayer = (rand() % 2);
 
     while (true)
     {
-        if (startplayer) 
+        if (startplayer) // PLAYER 1 TURN
         {
             if (isGridFull(grid, i=0)) break;
             if (gameMode == 1) cout << "it's your turn, choose a box\n";
@@ -69,7 +71,7 @@ int main()
             } 
             startplayer = false;
         }
-        if (startplayer == false && gameMode == 2)
+        if (startplayer == false && gameMode == 2) // PLAYER 2 TURN
         {
             if (isGridFull(grid, i=0)) break;
             cout << "it's P2 turn, choose a box\n";
@@ -84,7 +86,7 @@ int main()
         } 
         else
         {
-            if (isGridFull(grid, i=0)) break;
+            if (isGridFull(grid, i=0)) break; // CPU TURN
             cout << "CPU turn\n";
             CPUmove(grid, CPUXO, playerXO, i=0);
             PrintGrid(grid);
@@ -177,6 +179,7 @@ string CPUmove(string grid[8], string XorO, string enemyXO, int i)
     if (isMoveCorrect(grid, XorO, 4, 8 ,0)) { grid[0] = XorO; return XorO; }
     
         // TRY TO NOT LOSE IF POSSIBLE
+    
     // ROWS
     if (isMoveCorrect(grid, enemyXO, 0, 1 ,2)) { grid[2] = XorO; return XorO; }
     if (isMoveCorrect(grid, enemyXO, 1, 2 ,0)) { grid[0] = XorO; return XorO; }
