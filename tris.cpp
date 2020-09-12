@@ -12,20 +12,19 @@ void Clear();
 void PrintGrid(string*);
 string moveAndCheck(string*, string, int);
 bool isMoveCorrect(string*, string, int);
-string CPUmove(string*, string, string, int);
+string CPUmove(string*, string, string);
 bool CheckWin(string*, string);
-bool isGridFull(string*, int);
+bool isGridFull(string*);
 
 int main()
 {
-    string playerXO, CPUXO, printNumbers; 
-    bool startplayer; int playermove = 0, i, gameMode;
     string grid[] = {"1", "2", "3", "4", "5", "6", "7", "8", "9"};
     PrintGrid(grid);
-    for (auto i=0; i<=8; i++) grid[i] = " "; // for cleaning the array
+    for (auto i=0; i<=8; i++) grid[i] = " "; // it sets all grid's boxes to a blank space
     cout << "Welcome to the tris game!" << endl
          << "the initial player will be random" << endl
          << "Choose a game mode: 1 vs PC (1) or 1 vs 1 (2):" << endl;
+    int gameMode;
     while (true)
     {
         cin >> gameMode;
@@ -33,6 +32,8 @@ int main()
         cout << "wrong value, please reinsert: ";
     }
     cout << "Now choose between X or O: ";
+
+    string playerXO, CPUXO;
     while (true) 
     {
         cin >> playerXO;
@@ -44,14 +45,16 @@ int main()
     if (playerXO == "X") CPUXO = "O";
     else CPUXO = "X";
     
+    bool startplayer;
     srand((int)time(0));
     startplayer = (rand() % 2);
 
+    int playermove = 0;
     while (true)
     {
         if (startplayer) // PLAYER 1 TURN
         {
-            if (isGridFull(grid, i=0)) break;
+            if (isGridFull(grid)) break;
             if (gameMode == 1) cout << "it's your turn, choose a box\n";
             else cout << "It's player 1 turn, choose a box\n";
             moveAndCheck(grid, playerXO, playermove);
@@ -73,7 +76,7 @@ int main()
         }
         if (startplayer == false && gameMode == 2) // PLAYER 2 TURN
         {
-            if (isGridFull(grid, i=0)) break;
+            if (isGridFull(grid)) break;
             cout << "it's P2 turn, choose a box\n";
             moveAndCheck(grid, CPUXO, playermove);
             PrintGrid(grid);
@@ -86,9 +89,9 @@ int main()
         } 
         else
         {
-            if (isGridFull(grid, i=0)) break; // CPU TURN
+            if (isGridFull(grid)) break; // CPU TURN
             cout << "CPU turn\n";
-            CPUmove(grid, CPUXO, playerXO, i=0);
+            CPUmove(grid, CPUXO, playerXO);
             PrintGrid(grid);
             if (CheckWin(grid, CPUXO))
             {
@@ -99,13 +102,14 @@ int main()
         }
     }
     cout << "press return to exit...";
-    cin.ignore(); cin.get();      
+    cin.ignore(); cin.get();
+    Clear();      
     return 0;
 }
 
 void Clear()
 {
-    #if defined _WIN32 
+    #if defined _WIN32
         system("cls");
     #else 
         system("clear");
@@ -146,7 +150,7 @@ bool isMoveCorrect(string grid[8], string XorO, int a, int b, int c)
     return false;
 }
 
-string CPUmove(string grid[8], string XorO, string enemyXO, int i)
+string CPUmove(string grid[8], string XorO, string enemyXO)
 {
         // TRY TO WIN IF POSSIBLE 
     
@@ -235,9 +239,9 @@ bool CheckWin(string grid[8], string XorO)
     return false;
 }
 
-bool isGridFull(string grid[8], int i)
+bool isGridFull(string grid[8])
 {
-    for (i=0; i<=8; i++)
+    for (auto i=0; i<=8; i++)
     {
         if (grid[i] == " ") 
         {
