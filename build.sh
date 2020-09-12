@@ -1,2 +1,7 @@
 #!/bin/bash
-g++ tris.cpp -Wall -Weffc++ -Wextra -Wsign-conversion -o tris
+
+if [ ! -d "output/" ] 
+then
+	mkdir output
+fi
+g++ src/*.cpp -Wall -Weffc++ -Wextra -Wsign-conversion -o output/tris
