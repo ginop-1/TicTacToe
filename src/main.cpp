@@ -2,109 +2,118 @@
 #include <random>
 #include <ctime>
 #include <stdlib.h>
+#include "func.h"
 
 using std::cout;
 using std::cin;
 using std::string;
 using std::endl;
 
-void setup();
-void Clear();
-void PrintGrid(string*);
-string moveAndCheck(string*, string, int);
-bool isMoveCorrect(string*, string, int);
-string CPUmove(string*, string, string);
-bool CheckWin(string*, string);
-bool isGridFull(string*);
-
 int main()
 {
-    string grid[] = {"1", "2", "3", "4", "5", "6", "7", "8", "9"};
-    PrintGrid(grid);
-    for (auto i=0; i<=8; i++) grid[i] = " "; // it sets all grid's boxes to a blank space
-    cout << "Welcome to the tris game!" << endl
-         << "the initial player will be random" << endl
-         << "Choose a game mode: 1 vs PC (1) or 1 vs 1 (2):" << endl;
-    int gameMode;
-    while (true)
-    {
-        cin >> gameMode;
-        if (gameMode == 1 || gameMode == 2) break;
-        cout << "wrong value, please reinsert: ";
-    }
-    cout << "Now choose between X or O: ";
-
-    string playerXO, CPUXO;
     while (true) 
     {
-        cin >> playerXO;
-        if (playerXO == "X" || playerXO == "x" || playerXO == "O" || playerXO == "o") break;
-        else cout << "wrong value, please reinsert: ";
-    }
-    if (playerXO == "x") playerXO = "X";
-    else playerXO = "O"; 
-    if (playerXO == "X") CPUXO = "O";
-    else CPUXO = "X";
-    
-    bool startplayer;
-    srand((int)time(0));
-    startplayer = (rand() % 2);
-    int playermove = 0;
+        // SETUP PART
+        string grid[] {"1", "2", "3", "4", "5", "6", "7", "8", "9"};
+        PrintGrid(grid);
+        for (auto i=0; i<=8; i++) grid[i] = " "; // it sets all grid's boxes to a blank space
+        cout << "Welcome to the tris game!" << endl
+            << "the initial player will be random" << endl
+            << "Choose a game mode: 1 vs PC (1) or 1 vs 1 (2):" << endl;
+        int gameMode;
+        while (true)
+        {
+            cin >> gameMode;
+            if (gameMode == 1 || gameMode == 2) break;
+            wrongValue();
+        }
+        cout << "Now choose between X or O: ";
+        string playerXO, CPUXO;
+        while (true) 
+        {
+            cin >> playerXO;
+            if (playerXO == "X" || playerXO == "x" || playerXO == "O" || playerXO == "o") break;
+            wrongValue();
+        }
+        if (playerXO == "x" || playerXO == "X") playerXO = "X";
+        else playerXO = "O"; 
+        if (playerXO == "X") CPUXO = "O";
+        else CPUXO = "X";
+        
+        bool startplayer;
+        srand((int)time(0));
+        startplayer = (rand() % 2);
+        int playermove = 0;
 
-    while (true)
-    {
-        if (startplayer) // PLAYER 1 TURN
+        // GAME LOGIC PART
+        while (true)
         {
-            if (isGridFull(grid)) break;
-            if (gameMode == 1) cout << "it's your turn, choose a box\n";
-            else cout << "It's player 1 turn, choose a box\n";
-            moveAndCheck(grid, playerXO, playermove);
-            PrintGrid(grid);
-            if (CheckWin(grid, playerXO)) 
+            if (startplayer) // PLAYER 1 TURN
             {
-                if (gameMode == 1) 
+                if (isGridFull(grid)) break;
+                if (gameMode == 1) cout << "it's your turn, choose a box\n";
+                else cout << "It's player 1 turn, choose a box\n";
+                moveAndCheck(grid, playerXO, playermove);
+                PrintGrid(grid);
+                if (CheckWin(grid, playerXO)) 
                 {
-                    cout << "Congrats, you have won! \n\n";
+                    if (gameMode == 1) 
+                    {
+                        cout << "Congrats, you have won! \n\n";
+                        break;
+                    }
+                    else 
+                    {
+                        cout << "player 1 win! \n\n";
+                        break;
+                    }
+                } 
+                startplayer = false;
+            }
+            if (startplayer == false && gameMode == 2) // PLAYER 2 TURN
+            {
+                if (isGridFull(grid)) break;
+                cout << "it's P2 turn, choose a box\n";
+                moveAndCheck(grid, CPUXO, playermove);
+                PrintGrid(grid);
+                if (CheckWin(grid, CPUXO))
+                {
+                    cout << "player2 wins! \n\n";
                     break;
                 }
-                else 
-                {
-                    cout << "player 1 win! \n\n";
-                    break;
-                }
+                startplayer = true;
             } 
-            startplayer = false;
-        }
-        if (startplayer == false && gameMode == 2) // PLAYER 2 TURN
-        {
-            if (isGridFull(grid)) break;
-            cout << "it's P2 turn, choose a box\n";
-            moveAndCheck(grid, CPUXO, playermove);
-            PrintGrid(grid);
-            if (CheckWin(grid, CPUXO))
+            else
             {
-                cout << "player2 wins! \n\n";
-                break;
+                if (isGridFull(grid)) break;  // CPU TURN
+                cout << "CPU turn\n";
+                CPUmove(grid, CPUXO, playerXO);
+                PrintGrid(grid);
+                if (CheckWin(grid, CPUXO))
+                {
+                    cout << "the CPU wins! \n\n";
+                    break;
+                }
+                startplayer = true;
             }
-            startplayer = true;
-        } 
-        else
-        {
-            if (isGridFull(grid)) break;  // CPU TURN
-            cout << "CPU turn\n";
-            CPUmove(grid, CPUXO, playerXO);
-            PrintGrid(grid);
-            if (CheckWin(grid, CPUXO))
-            {
-                cout << "the CPU wins! \n\n";
-                break;
-            }
-            startplayer = true;
         }
+        char playAgain;
+        cout << "Play again? y/n:  ";
+        while (true)
+        {
+            cin >> playAgain;
+            if (playAgain == 'y' || playAgain == 'Y' || playAgain == 'n' || playAgain == 'N') break;
+            wrongValue();
+        }
+        if (playAgain == 'y' || playAgain == 'Y') continue;
+        else 
+        {  
+        cout << "press return to exit...";
+        cin.ignore(); cin.get(); // this makes the program wait for "return" key
+        Clear();
+        break;
+        }      
     }
-    cout << "press return to exit...";
-    cin.ignore(); cin.get(); // this makes the program wait for "return" key
-    Clear();      
     return 0;
 }
 

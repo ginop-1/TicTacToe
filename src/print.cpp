@@ -3,6 +3,11 @@
 using std::string;
 using std::cout;
 
+void wrongValue()
+{
+    cout << "wrong value, please reinsert: ";
+}
+
 void Clear()
 {
     #if defined _WIN32
