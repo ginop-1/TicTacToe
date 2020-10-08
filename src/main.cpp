@@ -16,6 +16,7 @@ int main()
         // SETUP PART
         string grid[] {"1", "2", "3", "4", "5", "6", "7", "8", "9"};
         PrintGrid(grid);
+        signature();
         for (auto i=0; i<=8; i++) grid[i] = " "; // it sets all grid's boxes to a blank space
         cout << "Welcome to the tris game!" << endl
             << "the initial player will be random" << endl
