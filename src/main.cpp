@@ -17,15 +17,17 @@ int main()
         string grid[] {"1", "2", "3", "4", "5", "6", "7", "8", "9"};
         PrintGrid(grid);
         signature();
-        for (auto i=0; i<=8; i++) grid[i] = " "; // it sets all grid's boxes to a blank space
+        for (auto i=0; i<=8; i++) 
+            grid[i] = " "; // it sets all grid's boxes to a blank space
         cout << "Welcome to the tris game!" << endl
-            << "the initial player will be random" << endl
-            << "Choose a game mode: 1 vs PC (1) or 1 vs 1 (2):" << endl;
+             << "the initial player will be random" << endl
+             << "Choose a game mode: 1 vs PC (1) or 1 vs 1 (2):" << endl;
         int gameMode;
         while (true)
         {
             cin >> gameMode;
-            if (gameMode == 1 || gameMode == 2) break;
+            if (gameMode == 1 || gameMode == 2)
+                break;
             wrongValue();
         }
         cout << "Now choose between X or O: ";
@@ -33,13 +35,18 @@ int main()
         while (true) 
         {
             cin >> playerXO;
-            if (playerXO == "X" || playerXO == "x" || playerXO == "O" || playerXO == "o") break;
+            if (playerXO == "X" || playerXO == "x" || playerXO == "O" || playerXO == "o") 
+                break;
             wrongValue();
         }
-        if (playerXO == "x" || playerXO == "X") playerXO = "X";
-        else playerXO = "O"; 
-        if (playerXO == "X") CPUXO = "O";
-        else CPUXO = "X";
+        if (playerXO == "x" || playerXO == "X") 
+            playerXO = "X";
+        else 
+            playerXO = "O"; 
+        if (playerXO == "X") 
+            CPUXO = "O";
+        else 
+            CPUXO = "X";
         
         bool startplayer;
         srand((int)time(0));
@@ -51,9 +58,12 @@ int main()
         {
             if (startplayer) // PLAYER 1 TURN
             {
-                if (isGridFull(grid)) break;
-                if (gameMode == 1) cout << "it's your turn, choose a box\n";
-                else cout << "It's player 1 turn, choose a box\n";
+                if (isGridFull(grid)) 
+                    break;
+                if (gameMode == 1) 
+                    cout << "it's your turn, choose a box\n";
+                else 
+                    cout << "It's player 1 turn, choose a box\n";
                 moveAndCheck(grid, playerXO, playermove);
                 PrintGrid(grid);
                 if (CheckWin(grid, playerXO)) 
@@ -73,7 +83,8 @@ int main()
             }
             if (startplayer == false && gameMode == 2) // PLAYER 2 TURN
             {
-                if (isGridFull(grid)) break;
+                if (isGridFull(grid)) 
+                    break;
                 cout << "it's P2 turn, choose a box\n";
                 moveAndCheck(grid, CPUXO, playermove);
                 PrintGrid(grid);
@@ -84,9 +95,10 @@ int main()
                 }
                 startplayer = true;
             } 
-            else
-            {
-                if (isGridFull(grid)) break;  // CPU TURN
+            else // CPU TURN
+            {   
+                if (isGridFull(grid)) 
+                    break;  
                 cout << "CPU turn\n";
                 CPUmove(grid, CPUXO, playerXO);
                 PrintGrid(grid);
@@ -103,10 +115,12 @@ int main()
         while (true)
         {
             cin >> playAgain;
-            if (playAgain == 'y' || playAgain == 'Y' || playAgain == 'n' || playAgain == 'N') break;
+            if (playAgain == 'y' || playAgain == 'Y' || playAgain == 'n' || playAgain == 'N') 
+                break;
             wrongValue();
         }
-        if (playAgain == 'y' || playAgain == 'Y') continue;
+        if (playAgain == 'y' || playAgain == 'Y') 
+            continue;
         else 
         {  
         cout << "press return to exit...";
@@ -124,7 +138,8 @@ string moveAndCheck(string grid[8], string PlayerXO, int playermove)
     {
         cin >> playermove;
         playermove--;
-        if (grid[playermove] != " ") cout << "this box is already filled, please insert a valid value: ";
+        if (grid[playermove] != " ") 
+            cout << "this box is already filled, please insert a valid value: ";
         else 
         {
             grid[playermove] = PlayerXO; 
@@ -152,9 +167,7 @@ bool isGridFull(string grid[8])
     for (auto i=0; i<=8; i++)
     {
         if (grid[i] == " ") 
-        {
             return false;
-        }
     }
     cout << "Thid is a draw! ";
     return true;

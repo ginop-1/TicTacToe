@@ -4,7 +4,8 @@ using std::string;
  
 bool isMoveCorrect(string grid[8], string XorO, int a, int b, int c)
 {
-    if (grid[a]==XorO && grid[b]==XorO && grid[c]==" ") return true;
+    if (grid[a]==XorO && grid[b]==XorO && grid[c]==" ") 
+        return true;
     return false;
 }
 
@@ -79,7 +80,8 @@ string CPUmove(string grid[8], string XorO, string enemyXO)
             grid[i] = XorO;
             return XorO;
         }
-        if (i == 8) i=1;
+        if (i == 8) 
+            i=1;
     }
     return " "; 
 }
